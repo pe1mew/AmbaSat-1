@@ -59,15 +59,15 @@
 
 
 // initial job
-static void initfunc (osjob_t* j)
-{
-    // reset MAC state
-    LMIC_reset();
+// static void initfunc (osjob_t* j)
+// {
+//     // reset MAC state
+//     LMIC_reset();
 
-    // start joining
-    LMIC_startJoining();
-    // init done - onEvent() callback will be invoked...
-}
+//     // start joining
+//     LMIC_startJoining();
+//     // init done - onEvent() callback will be invoked...
+// }
 
 // -----------------------------------------------------------------------------
 // readVcc
@@ -141,13 +141,12 @@ void onEvent (ev_t ev)
         case EV_REJOIN_FAILED:
             Serial.println(F("EV_REJOIN_FAILED"));
             // Re-init
-            os_setCallback(&initjob, initfunc);
+            // os_setCallback(&initjob, initfunc);
         break;
         case EV_TXCOMPLETE:
             sleeping = true;
 
-            if (LMIC.dataLen)
-            {
+            if (LMIC.dataLen){
                 // data received in rx slot after tx
                 // if any data received, a LED will blink
                 // this number of times, with a maximum of 10
@@ -156,13 +155,11 @@ void onEvent (ev_t ev)
                 i=(LMIC.frame[LMIC.dataBeg]);
                 // i (0..255) can be used as data for any other application
                 // like controlling a relay, showing a display message etc.
-                if (i>10)
-                {
+                if (i>10){
                     i=10;     // maximum number of BLINKs
                 }
 
-                for(j = 0; j < i ; j++)
-                {
+                for(j = 0; j < i ; j++){
                     digitalWrite(LedPin, HIGH);
                     delay(200);
                     digitalWrite(LedPin, LOW);
@@ -201,8 +198,7 @@ void onEvent (ev_t ev)
 // =========================================================================================================================================
 // do_send
 // =========================================================================================================================================
-void do_send(osjob_t* j)
-{
+void do_send(osjob_t* j){
     LoraMessage message;
 
     #ifdef DEBUG
@@ -218,12 +214,9 @@ void do_send(osjob_t* j)
     message.addUint8(packetData.sensorType);
 
     // Check that there is not a current TX/RX job running
-    if (LMIC.opmode & OP_TXRXPEND)
-    {
+    if (LMIC.opmode & OP_TXRXPEND){
         Serial.println(F("Current OP_TXRXPEND is running so not sending"));
-    }
-    else
-    {
+    }else{
         // Prepare upstream data transmission at the next possible time.
         LMIC_setTxData2(1, message.getBytes(), message.getLength(), 0);
         Serial.println(F("Sending payload "));
@@ -233,8 +226,7 @@ void do_send(osjob_t* j)
 // =========================================================================================================================================
 // setup
 // =========================================================================================================================================
-void setup()
-{
+void setup(){
     Serial.begin(SERIAL_BAUD);
     delay(250);
 
@@ -324,20 +316,17 @@ void loop()
 {
     packetData.field2 = 21; // Assign dummy temperature value to field1
     packetData.field1 = 55; // Assign dummy humidity value to field1
-
     packetData.voltage = readVcc();
 
     do_send(&sendjob);    // send the sensor payload to TTN
 
-    while(sleeping == false)
-    {
+    while(sleeping == false){
         os_runloop_once();
     }
 
     sleeping = false;
 
-    for (int i=0; i < sleepcycles; i++)
-    {
+    for (int i=0; i < sleepcycles; i++){
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);    //sleep 8 seconds * sleepcycles
     }
 }

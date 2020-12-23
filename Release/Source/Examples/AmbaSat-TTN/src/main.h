@@ -25,7 +25,7 @@
 #define LedPin 9
 #define ADR_MODE 1
 
-int sleepcycles = 130;
+int sleepcycles = 7; // Multiple of 8 seconds, original 130 * 8 /60 = 17 minuten
 bool joined = false;
 bool sleeping = false;
 
@@ -34,7 +34,7 @@ bool sleeping = false;
 // -----------------------------------------------------------------------------
 struct threeDData 
 {
-  	uint8_t x;
+  uint8_t x;
 	uint8_t y;
 	uint8_t z;
 };
@@ -58,13 +58,22 @@ static const uint8_t sensorType = SENSOR_01_DHT30; // for test purposes
 // Set the following three values to match your unique AmbaSat-1 satellite   
 // 
 // The Network Session Key
-static const PROGMEM u1_t NWKSKEY[16] = {0x38,0xD8,0xE7,0x52,0xEB,0x4F,0x81,0x0F,0xD9,0x55,0xAD,0xA4,0x1C,0xC2,0x5E,0xD1}; //<< CHANGE
+// static const PROGMEM u1_t NWKSKEY[16] = {0x38,0xD8,0xE7,0x52,0xEB,0x4F,0x81,0x0F,0xD9,0x55,0xAD,0xA4,0x1C,0xC2,0x5E,0xD1}; //<< CHANGE
+
+// // LoRaWAN AppSKey, application session key
+// static const u1_t PROGMEM APPSKEY[16] = {0x6B,0x98,0xF3,0x21,0x46,0xBF,0x35,0x20,0x21,0x99,0xBE,0x13,0x45,0x34,0x4C,0x6B}; //<< CHANGE
+
+// // LoRaWAN end-device address (DevAddr)
+// static const u4_t DEVADDR = 0x26011D67 ;  //<< CHANGE
+
+// The Network Session Key
+static const PROGMEM u1_t NWKSKEY[16] = { 0xFE, 0x6B, 0xF4, 0x10, 0xD9, 0xCB, 0xC4, 0x3F, 0xE3, 0x05, 0xEE, 0x88, 0xD8, 0x9E, 0x0D, 0x69 }; //<< CHANGE
 
 // LoRaWAN AppSKey, application session key
-static const u1_t PROGMEM APPSKEY[16] = {0x6B,0x98,0xF3,0x21,0x46,0xBF,0x35,0x20,0x21,0x99,0xBE,0x13,0x45,0x34,0x4C,0x6B}; //<< CHANGE
+static const u1_t PROGMEM APPSKEY[16] = { 0x31, 0x03, 0x36, 0xAB, 0x3B, 0x51, 0x54, 0x83, 0x25, 0x70, 0xEC, 0xF0, 0xF8, 0x68, 0xAC, 0x7C }; //<< CHANGE
 
 // LoRaWAN end-device address (DevAddr)
-static const u4_t DEVADDR = 0x26011D67 ;  //<< CHANGE
+static const u4_t DEVADDR = 0x26011F4C ;  //<< CHANGE
 /***********************************  IMPORTANT */
 
 // These callbacks are only used in over-the-air activation, so they are
